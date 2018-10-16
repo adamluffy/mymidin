@@ -118,6 +118,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
         </activity>
+
+        <activity android:name=".sales.SalesEditActivity"
+            android:label="@string/title_activity_sales_edit"
+            android:parentActivityName=".sales.SalesViewActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".sales.SalesViewActivity" />
+        </activity>
     </application>
 
 </manifest>

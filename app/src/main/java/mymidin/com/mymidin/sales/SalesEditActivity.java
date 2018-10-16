@@ -1,6 +1,5 @@
 package mymidin.com.mymidin.sales;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -16,24 +15,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import dataadapter.CustomerArrayAdapter;
 import dataadapter.ProductSoldDataAdapter;
 import model.Customer;
 import model.ProductSold;
 import model.Sales;
 import mymidin.com.mymidin.R;
+import mymidin.com.mymidin.product.ProductSoldDialogFragment;
+import respository.CustomerDatabase;
 import respository.SalesDatabase;
 
-public class SalesEditActivity extends AppCompatActivity implements View.OnClickListener{
+public class SalesEditActivity extends AppCompatActivity implements View.OnClickListener, ProductSoldDialogFragment.ProductSoldListener {
 
     private TextInputLayout salesDateLayout, salesCustLayout;
     private TextInputEditText salesDate;
@@ -45,6 +47,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
     private Customer customer;
 
     private ArrayList<ProductSold> productSolds;
+    private ArrayList<Customer> customers;
     private ProductSoldDataAdapter dataAdapter;
 
     private double total = 0; //total amount
@@ -52,6 +55,8 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
     private ListenerRegistration salesListener;
 
     SimpleDateFormat dateFormat;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +71,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
 
         productSolds = new ArrayList<>();
+        customers = new ArrayList<>();
 
         salesDateLayout = findViewById(R.id.sales_input_date_layout);
         salesDate = findViewById(R.id.sales_input_date);
@@ -78,6 +84,8 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
         addSalesBtn = findViewById(R.id.add_sales_btn);
         addSoldBtn = findViewById(R.id.add_sold_btn);
 
+        totalAmount = findViewById(R.id.total_amount_sales);
+
 
     }
 
@@ -87,6 +95,23 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
 
         customer = s.getCustomer();
         salesCust.setText(s.getCustomer().getCustName());
+
+        if(user!=null){
+            CustomerDatabase.getCustomers()
+                    .addOnSuccessListener(this, queryDocumentSnapshots -> {
+                        for(QueryDocumentSnapshot doc: queryDocumentSnapshots){
+                            customers.add(doc.toObject(Customer.class));
+                        }
+
+
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Failed: "+e.getMessage(), Toast.LENGTH_SHORT).show());
+        }
+
+        CustomerArrayAdapter arrayAdapter = new CustomerArrayAdapter(SalesEditActivity.this,customers);
+        salesCust.setAdapter(arrayAdapter);
+        salesCust.setThreshold(1);
+        salesCust.setOnItemClickListener((parent, view, position, id) -> customer = customers.get(position) );
 
         total = s.getTotalAmount();
         totalAmount.setText(String.format(Locale.ENGLISH,"%.2f",s.getTotalAmount()));
@@ -123,6 +148,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
         ItemTouchHelper helper = new ItemTouchHelper(cb);
         helper.attachToRecyclerView(soldRecyclerView);
     }
+
 
     private boolean validateDate(){
 
@@ -203,9 +229,18 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
 
         switch (v.getId()){
             case R.id.add_sales_btn:
+
+                if(validateInput()){
+
+                }
+
                 break;
 
             case R.id.add_sold_btn:
+
+                ProductSoldDialogFragment dialogFragment = new ProductSoldDialogFragment();
+                dialogFragment.show(getSupportFragmentManager(),"select Product");
+
                 break;
 
             case R.id.sales_cust_input:
@@ -214,4 +249,9 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
     }
 
 
+    @Override
+    public void onProductSoldListener(ProductSold sold) {
+
+        //if product is exist inside the array, update the value of quantity
+    }
 }

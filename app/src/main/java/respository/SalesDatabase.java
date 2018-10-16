@@ -8,6 +8,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Map;
+
 import model.Sales;
 
 public class SalesDatabase {
@@ -29,6 +31,8 @@ public class SalesDatabase {
     public static Task<Void> removeSales(String id){
         return salesRef.document(id).delete();
     }
+
+    public static Task<Void> updateSales(String id, Map<String,Object> updates){ return salesRef.document(id).update(updates); }
 
     public static FirestoreRecyclerOptions<Sales> getOptions(Query query){
 
