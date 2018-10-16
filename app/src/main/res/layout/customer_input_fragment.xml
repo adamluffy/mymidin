@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cust_image_input"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/cust_name_input_layout"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="@+id/cust_name_input_layout"
+        app:layout_constraintStart_toStartOf="@+id/cust_name_input_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/cust_name_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cust_ic_input_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cust_image_input">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/cust_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name_text"
+            android:inputType="textPersonName" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/cust_ic_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cust_address_input_layout"
+        app:layout_constraintEnd_toEndOf="@+id/cust_name_input_layout"
+        app:layout_constraintStart_toStartOf="@+id/cust_name_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/cust_name_input_layout">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/cust_ic_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/ic_no_text"
+            android:inputType="textPhonetic" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/cust_address_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_cust_btn"
+        app:layout_constraintEnd_toEndOf="@+id/cust_ic_input_layout"
+        app:layout_constraintStart_toStartOf="@+id/cust_ic_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/cust_ic_input_layout">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/cust_address_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_text"
+            android:inputType="textMultiLine"
+            android:singleLine="false" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/add_cust_btn"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/add_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cust_address_input_layout"
+        app:layout_constraintStart_toStartOf="@+id/cust_address_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/cust_address_input_layout" />
+</android.support.constraint.ConstraintLayout>

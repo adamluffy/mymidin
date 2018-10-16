@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "273754185917",
+    "firebase_url": "https://my-midin.firebaseio.com",
+    "project_id": "my-midin",
+    "storage_bucket": "my-midin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273754185917:android:dcf74c145f985cb8",
+        "android_client_info": {
+          "package_name": "mymidin.com.mymidin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273754185917-8noeecme545f422p4mabmfk7biaj5eca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mymidin.com.mymidin",
+            "certificate_hash": "6e3c1068fd5024475f8846807427aab011984083"
+          }
+        },
+        {
+          "client_id": "273754185917-ok5nha64k4lafftfoqpq8ohvj4e5f2mo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_x8iHaIrpBVGblFmnYMnoDEQvGHZG3jw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273754185917-ok5nha64k4lafftfoqpq8ohvj4e5f2mo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
