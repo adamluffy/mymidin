@@ -1,5 +1,6 @@
 package mymidin.com.mymidin.sales;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -17,12 +18,16 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import dataadapter.CustomerArrayAdapter;
@@ -45,6 +50,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
     private Button addSalesBtn;
     
     private Customer customer;
+    private Sales sales; //to compare with the latest input
 
     private ArrayList<ProductSold> productSolds;
     private ArrayList<Customer> customers;
@@ -55,6 +61,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
     private ListenerRegistration salesListener;
 
     SimpleDateFormat dateFormat;
+    private Calendar dateSales;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -65,6 +72,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_sales_edit);
 
         dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        dateSales = Calendar.getInstance();
 
         Toolbar toolbar = findViewById(R.id.sales_toolbar_edit);
         toolbar.setTitle("Edit sales");
@@ -92,6 +100,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
     private void initializeUI(Sales s){
 
         salesDate.setText(dateFormat.format(s.getDate()));
+        salesDate.setOnClickListener(this);
 
         customer = s.getCustomer();
         salesCust.setText(s.getCustomer().getCustName());
@@ -149,6 +158,30 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
         helper.attachToRecyclerView(soldRecyclerView);
     }
 
+    private Map<String,Object> updateSales(){
+
+        Map<String, Object> updates = new HashMap<>();
+
+        if(!sales.getCustomer().getCustName().toLowerCase().equals(customer.getCustName().toLowerCase())){
+            updates.put("customer",customer);
+        }
+
+        if(!sales.getDate().equals(dateSales.getTime())){
+            updates.put("date",dateSales.getTime());
+        }
+
+        if(!sales.getProducts().equals(productSolds)){
+            updates.put("products",productSolds);
+        }
+
+        if(sales.getTotalAmount() != total){
+            updates.put("totalAmount",total);
+        }
+
+        updates.put("updateAt",FieldValue.serverTimestamp());
+
+        return updates;
+    }
 
     private boolean validateDate(){
 
@@ -212,7 +245,7 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
                     }
 
                     if(documentSnapshot!=null && documentSnapshot.exists()){
-                        Sales sales = documentSnapshot.toObject(Sales.class);
+                        sales = documentSnapshot.toObject(Sales.class);
                         if(sales!=null) initializeUI(sales);
                     }
                 });
@@ -231,7 +264,12 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
             case R.id.add_sales_btn:
 
                 if(validateInput()){
-
+                    SalesDatabase.updateSales(getIntent().getStringExtra("id"),updateSales())
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Successfully update sales", Toast.LENGTH_SHORT).show();
+                                SalesEditActivity.this.finish();
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: "+e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
 
                 break;
@@ -243,7 +281,17 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
 
                 break;
 
-            case R.id.sales_cust_input:
+            case R.id.sales_input_date:
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year,month,dayOfMonth);
+                    dateSales.set(year,month,dayOfMonth);
+                    salesDate.setText(dateFormat.format(newDate.getTime()));
+                }, dateSales.get(Calendar.YEAR),dateSales.get(Calendar.MONTH),dateSales.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.show();
+
                 break;
         }
     }

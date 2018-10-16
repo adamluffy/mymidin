@@ -1,6 +1,7 @@
 package model;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +14,7 @@ public class Sales {
     private ArrayList<ProductSold> products;
     private double totalAmount;
     private String sellerId;
+    private Date updateAt;
 
     public Sales() {
     }
@@ -80,5 +82,14 @@ public class Sales {
 
     public void setSellerId(String sellerId) {
         this.sellerId = sellerId;
+    }
+
+    @Exclude
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
     }
 }
