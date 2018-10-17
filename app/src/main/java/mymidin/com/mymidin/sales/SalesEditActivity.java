@@ -301,5 +301,13 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
     public void onProductSoldListener(ProductSold sold) {
 
         //if product is exist inside the array, update the value of quantity
+        for (ProductSold s:productSolds) {
+            if(s.getProductName().contains(sold.getProductName())){
+                //update value
+                s.setProductQty(sold.getProductQty());
+            }
+        }
+
+
     }
 }
