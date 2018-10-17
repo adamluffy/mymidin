@@ -80,7 +80,13 @@ public class ProductSoldDialogFragment extends DialogFragment {
         dialog.setView(v)
                 .setPositiveButton("OK", (dialog12, which) -> {
                     if(validateInput()){
-                        ProductSold sold = new ProductSold(selectedProduct.getName(),selectedProduct.getPrice(),Integer.parseInt(qtyEditText.getText().toString()));
+
+                        ProductSold sold = new ProductSold(
+                                selectedProduct.getName(),
+                                selectedProduct.getPrice(),
+                                Integer.parseInt(qtyEditText.getText().toString()),
+                                selectedProduct.getType());
+
                         Toast.makeText(getActivity(),sold.getProductName(),Toast.LENGTH_SHORT).show();
                         mListener.onProductSoldListener(sold);
                     }else{

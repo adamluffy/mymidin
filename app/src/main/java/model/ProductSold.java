@@ -4,14 +4,16 @@ public class ProductSold {
 
     private String productName;
     private double productPrice;
+    private String productType;
     private int productQty;
 
     public ProductSold(){}
 
-    public ProductSold(String productName, double productPrice, int productQty) {
+    public ProductSold(String productName, double productPrice, int productQty, String productType) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productQty = productQty;
+        this.productType = productType;
     }
 
     public String getProductName() {
@@ -39,5 +41,13 @@ public class ProductSold {
     public ProductSold setProductQty(int productQty) {
         this.productQty = productQty;
         return this;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 }
