@@ -38,8 +38,7 @@ public class ProductViewActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.product_view_app_bar);
         toolbar.setTitle("View Product");
         setSupportActionBar(toolbar);
-
-        if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productImage = findViewById(R.id.product_image_view);
         productName = findViewById(R.id.product_name_view);
@@ -52,7 +51,6 @@ public class ProductViewActivity extends AppCompatActivity {
             initializeProduct(intent.getStringExtra("id"));
         }
 
-        initializeProduct(PreferencesUtility.loadPref(getApplicationContext()));
 
     }
 
@@ -98,7 +96,7 @@ public class ProductViewActivity extends AppCompatActivity {
                 //go to edit mode
                 Intent i = new Intent(this,ProductEditActivity.class);
                 i.putExtra("id",intent.getStringExtra("id"));
-                startActivityForResult(i,113);
+                startActivity(i);
 
                 return true;
 
@@ -110,6 +108,13 @@ public class ProductViewActivity extends AppCompatActivity {
                 //2. if yes, delete the item
                 //3. if no, abort the operation
 
+                return true;
+
+            case android.R.id.home:
+
+                Intent in = new Intent(this,ProductEditActivity.class);
+                in.putExtra("id",intent.getStringExtra("id"));
+                startActivity(in);
                 return true;
 
                 default:

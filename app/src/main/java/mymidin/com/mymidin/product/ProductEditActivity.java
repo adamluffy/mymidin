@@ -298,7 +298,7 @@ public class ProductEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()==R.id.homeAsUp){
+        if(item.getItemId()== android.R.id.home){
             Intent i = new Intent(this,ProductViewActivity.class);
             i.putExtra("id",getIntent().getStringExtra("id"));
             startActivity(i);
