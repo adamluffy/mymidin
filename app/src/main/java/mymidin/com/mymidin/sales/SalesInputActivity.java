@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -34,8 +33,8 @@ import dataadapter.ProductSoldDataAdapter;
 import model.Customer;
 import model.ProductSold;
 import model.Sales;
-import mymidin.com.mymidin.product.ProductSoldDialogFragment;
 import mymidin.com.mymidin.R;
+import mymidin.com.mymidin.product.ProductSoldDialogFragment;
 import respository.SalesDatabase;
 
 public class SalesInputActivity extends AppCompatActivity implements View.OnClickListener, ProductSoldDialogFragment.ProductSoldListener{
@@ -251,11 +250,10 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
                         e.printStackTrace();
                     }
 
-                    if(queryDocumentSnapshots!=null && queryDocumentSnapshots.isEmpty()){
-                        salesNumber = "IV00000001";
-                    }else if(queryDocumentSnapshots!=null && !queryDocumentSnapshots.isEmpty()){
-                        DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
-                        Sales s = doc.toObject(Sales.class);
+                    salesNumber = "IV00000001";
+
+                    if(queryDocumentSnapshots!=null && !queryDocumentSnapshots.isEmpty()){
+                        Sales s = queryDocumentSnapshots.getDocuments().get(0).toObject(Sales.class);
                         if(s!=null){
                             String str = s.getSalesNumber();
                             str = str.replaceAll("\\D+","");
