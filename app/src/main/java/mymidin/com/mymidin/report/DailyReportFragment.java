@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import model.DailyReport;
 import model.Product;
 import model.ProductSold;
 import model.Sales;
@@ -77,17 +79,20 @@ public class DailyReportFragment extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed: "+e.getMessage(), Toast.LENGTH_SHORT).show());
 
         //calculate total sales in category(within the products array)
+        ArrayList<DailyReport> dailyReports = new ArrayList<>();
+
+        ArrayList<String> productTypes = new ArrayList<>();
+
         for(Sales s:sales){
-
             for(ProductSold sold: s.getProducts()){
-
+                if(!productTypes.contains(sold.getProductType())){
+                    productTypes.add(sold.getProductType());
+                    Log.d("tag",sold.getProductType());
+                }
             }
-
         }
-    }
-
-    private class DailyReport{
 
 
     }
+
 }
