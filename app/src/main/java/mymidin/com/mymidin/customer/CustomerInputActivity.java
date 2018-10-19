@@ -23,6 +23,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import model.Customer;
 import mymidin.com.mymidin.R;
 import respository.CustomerDatabase;
+import utilities.ValidationUtility;
 
 public class CustomerInputActivity extends AppCompatActivity {
 
@@ -107,63 +108,19 @@ public class CustomerInputActivity extends AppCompatActivity {
     }
 
 
-    private boolean validateName(){
-
-        String name = custName.getText().toString().trim();
-
-        if(name.isEmpty()){
-            custNameLayout.setError("Please input customer name");
-            return false;
-        }else{
-            custNameLayout.setErrorEnabled(false);
-        }
-        return true;
-    }
-
-    private boolean validateIC(){
-
-        String ic = custIc.getText().toString().trim();
-
-        if(ic.isEmpty()){
-            custICLayout.setError("Please input IC number");
-            return false;
-        }else if(!Pattern.compile("\\d{6}-\\d{2}-\\d{4}").matcher(ic).matches()){
-            custICLayout.setError("Please input valid IC Number");
-            return false;
-        }else{
-            custICLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
-    private boolean validateAddress(){
-
-        String address = custAdress.getText().toString().trim();
-
-        if(address.isEmpty()){
-            custAddressLayout.setError("Please input address");
-            return false;
-        }else{
-            custAddressLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
     private boolean validateInput(){
 
         boolean isValid = true;
 
-        if(!validateName()){
+        if(!ValidationUtility.validateString(custNameLayout,custName.getText().toString())){
             isValid = false;
         }
 
-        if(!validateIC()){
+        if(!ValidationUtility.validateIdentityNumber(custICLayout,custIc.getText().toString())){
             isValid = false;
         }
 
-        if(!validateAddress()){
+        if(!ValidationUtility.validateString(custAddressLayout,custAdress.getText().toString())){
             isValid = false;
         }
 

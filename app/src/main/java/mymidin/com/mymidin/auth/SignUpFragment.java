@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 import mymidin.com.mymidin.R;
 import utilities.FragmentUtility;
+import utilities.ValidationUtility;
 
 public class SignUpFragment extends Fragment implements OnCompleteListener<AuthResult>{
 
@@ -73,76 +74,20 @@ public class SignUpFragment extends Fragment implements OnCompleteListener<AuthR
         return view;
     }
 
-    private boolean validateName(){
-
-        String n = name.getText().toString().trim();
-
-        if(n.isEmpty()){
-            nameLayout.setError("Please input your name");
-            return false;
-        }else{
-            nameLayout.setErrorEnabled(false);
-        }
-
-        return true;
-
-    }
-
-    private boolean validateEmail() {
-
-        String e = email.getText().toString().trim();
-
-        if (e.isEmpty()) {
-            emailLayout.setError("Please input your email");
-            return false;
-        } else if(!Pattern.matches("^(.+)@(.+)$",e)){
-            emailLayout.setError("Please input a valid email");
-            return false;
-        }else{
-            emailLayout.setErrorEnabled(false);
-        }
-        return true;
-    }
-
-    private boolean validatePassword(){
-
-        String p = pwd.getText().toString().trim();
-        String p2 = confirmPwd.getText().toString().trim();
-
-        /*
-            1. password must contain at least one uppercase,one lowercase, one numeric
-            2. password must be at least 8-24 character
-            3. password field must also match confirm password field
-        */
-        if(p.isEmpty()){
-            passwordLayout.setError("Please input your password");
-            return false;
-        }else if(!Pattern.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20})",p)){
-            passwordLayout.setError("Password must be at least one uppercase, one lowercase, one numeric, minimum 8 character");
-            return false;
-        } else if(!p.equals(p2)) {
-            confirmPwdLayout.setError("The password enter is not match with the above");
-            return false;
-        }else{
-            passwordLayout.setErrorEnabled(false);
-            confirmPwdLayout.setErrorEnabled(false);
-        }
-        return true;
-    }
-
     private boolean validateInput(){
 
         boolean isValid = true;
 
-        if(!validateName()){
+        if(!ValidationUtility.validateString(nameLayout,name.getText().toString())){
             isValid = false;
         }
 
-        if(!validateEmail()){
+        if(!ValidationUtility.validateEmail(emailLayout,email.getText().toString())){
             isValid = false;
         }
 
-        if(!validatePassword()){
+        if(!ValidationUtility.validateStrongPassword(passwordLayout,confirmPwdLayout,pwd.getText().toString(),confirmPwd.getText().toString())){
+
             isValid = false;
         }
 

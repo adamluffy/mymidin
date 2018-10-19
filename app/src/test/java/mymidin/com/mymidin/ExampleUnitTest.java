@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import model.Product;
+import model.ProductType;
 import respository.ProductDatabase;
 
 import static org.junit.Assert.assertEquals;
@@ -24,14 +25,11 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testIncrementNumber(){
+    public void testProductTypeValue(){
 
-        String password = "IV00000001";
-        password = password.replaceAll("\\D+","");
-        String increment = String.format("%0"+password.length()+"d",
-                Integer.parseInt(password)+1);
-        String salesNumber = "IV"+increment;
-        assertEquals("IV00000002",salesNumber);
+        for (ProductType type:ProductType.values()) {
+            System.out.println(type.name()+" : "+type.getId());
+        }
 
     }
 

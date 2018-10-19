@@ -11,7 +11,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +21,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import mymidin.com.mymidin.R;
+import mymidin.com.mymidin.auth.SignInActivity;
 import mymidin.com.mymidin.customer.CustomerListFragment;
 import mymidin.com.mymidin.product.ProductListFragment;
-import mymidin.com.mymidin.R;
 import mymidin.com.mymidin.report.ReportActivity;
 import mymidin.com.mymidin.sales.SalesListFragment;
-import mymidin.com.mymidin.auth.SignInActivity;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,8 +35,6 @@ public class HomeActivity extends AppCompatActivity
     Toolbar toolbar;
     FloatingActionButton addBtn;
     View header;
-
-    SearchView searchView;
 
 
     @Override

@@ -59,6 +59,8 @@ public class DailyReportFragment extends Fragment {
         dailySales.setData(data);
         dailySales.invalidate();
 
+        setPieChartData();
+
         return view;
     }
 
@@ -73,6 +75,9 @@ public class DailyReportFragment extends Fragment {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for(QueryDocumentSnapshot q: queryDocumentSnapshots){
                         Sales s = q.toObject(Sales.class);
+                        for (ProductSold Sold:s.getProducts()){
+                            Log.d("types",Sold.getProductType());
+                        }
                         sales.add(s);
                     }
                 })
@@ -87,12 +92,13 @@ public class DailyReportFragment extends Fragment {
             for(ProductSold sold: s.getProducts()){
                 if(!productTypes.contains(sold.getProductType())){
                     productTypes.add(sold.getProductType());
-                    Log.d("tag",sold.getProductType());
                 }
             }
         }
 
-
+        for(String type:productTypes){
+            Log.d("types",type);
+        }
     }
 
 }

@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import mymidin.com.mymidin.home.HomeActivity;
 import mymidin.com.mymidin.R;
+import utilities.ValidationUtility;
 
 public class LoginFragment extends Fragment {
 
@@ -63,46 +64,15 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    private boolean validateEmail(){
-
-        String e = email.getText().toString().trim();
-
-        if (e.isEmpty()) {
-            emailLayout.setError("Please input your email");
-            return false;
-        } else if(!Pattern.matches("^(.+)@(.+)$",e)){
-            emailLayout.setError("Please input a valid email");
-            return false;
-        }else{
-            emailLayout.setErrorEnabled(false);
-        }
-        return true;
-
-    }
-
-    private boolean validatePassword(){
-
-        String pass = pwd.getText().toString().trim();
-
-        if(pass.isEmpty()){
-            pwdLayout.setError("Please input your password");
-            return false;
-        }else{
-            pwdLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
     private boolean validateInput() {
 
         boolean isValid = true;
 
-        if(!validateEmail()){
+        if(!ValidationUtility.validateEmail(emailLayout,email.getText().toString())){
             isValid = false;
         }
 
-        if(!validatePassword()){
+        if(!ValidationUtility.validateString(pwdLayout,pwd.getText().toString())){
             isValid = false;
         }
 
@@ -111,24 +81,22 @@ public class LoginFragment extends Fragment {
 
     private void signInWithEmailAndPassword(String email,String password){
 
-        //TODO: show progress Circle
 
-        //TODO: mAuth.signInWithEmailAndPassword(email,password);
         mAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(task -> {
                    if(task.isSuccessful()){
 
                        FirebaseUser user = mAuth.getCurrentUser();
 
-                       //TODO: if user email is not verify, cannot login
+
                        if(user!=null){
-                           //TODO: Login to page
+
                            Toast.makeText(getActivity(),String.valueOf(user.isEmailVerified()),Toast.LENGTH_SHORT).show(); //testing if email is verify
                            toHomePage(); //toHomePage
                        }
 
                    }else{
-                        //TODO: Wrong password Or email
+
                        Toast.makeText(getActivity(),"Failed to login"+task.getResult(),Toast.LENGTH_SHORT).show();
                    }
                 });

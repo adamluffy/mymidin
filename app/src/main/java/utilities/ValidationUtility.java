@@ -24,6 +24,17 @@ public class ValidationUtility {
 
 
     public static boolean validateEmail(TextInputLayout emailInputLayout, String email){
+
+        if (email.isEmpty()) {
+            emailInputLayout.setError("Please input your email");
+            return false;
+        } else if(!Pattern.matches("^(.+)@(.+)$",email)){
+            emailInputLayout.setError("Please input a valid email");
+            return false;
+        }else{
+            emailInputLayout.setErrorEnabled(false);
+        }
+
         return true;
     }
 

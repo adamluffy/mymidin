@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,8 +27,10 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import model.Product;
+import model.ProductType;
 import mymidin.com.mymidin.R;
 import respository.ProductDatabase;
+import utilities.ValidationUtility;
 
 public class ProductEditActivity extends AppCompatActivity {
 
@@ -70,6 +73,10 @@ public class ProductEditActivity extends AppCompatActivity {
 
         prodTypeLayout = findViewById(R.id.product_type_edit_layout);
         prodType = findViewById(R.id.product_type_edit);
+
+        ArrayAdapter<String> typeAdatper = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, ProductType.getTypes());
+        prodType.setAdapter(typeAdatper);
+        prodType.setThreshold(1);
 
         saveBtn = findViewById(R.id.save_product_btn);
 
@@ -127,95 +134,24 @@ public class ProductEditActivity extends AppCompatActivity {
         });
 
     }
-    private boolean validateName(){
-
-        String name = prodName.getText().toString();
-
-        if(name.isEmpty()){
-            prodNameLayout.setError("Please input product name");
-            return false;
-        }else{
-            prodNameLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
-    private boolean validatePrice(){
-
-        String price = prodPrice.getText().toString();
-
-        if(price.isEmpty()){
-            prodPriceLayout.setError("Please input product price");
-            return false;
-        }else if(isDouble(price)){
-            prodPriceLayout.setError("Please input a numeric price");
-            return false;
-        }else{
-            prodPriceLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
-    private boolean isDouble(String price){
-        try {
-            double d = Double.parseDouble(price);
-        }catch (NumberFormatException | NullPointerException e){
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean validateQuantity(){
-
-        String qty = prodQty.getText().toString();
-
-        if(qty.isEmpty()){
-            prodQtyLayout.setError("Please input product quantity");
-            return false;
-        }else if(!Pattern.matches("\\d+",qty)){
-            prodQtyLayout.setError("Please input a numeric quantity");
-            return false;
-        }else{
-            prodQtyLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
-    private boolean validateType(){
-
-        String type = prodType.getText().toString();
-
-        if(type.isEmpty()){
-            prodTypeLayout.setError("Please input product type");
-            return false;
-        }else{
-            prodTypeLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
 
     private boolean validateInput() {
 
         boolean isValid = true;
 
-        if(!validateName()){
+        if(!ValidationUtility.validateString(prodNameLayout,prodName.getText().toString())){
             isValid = false;
         }
 
-        if (!validateQuantity()){
+        if (!ValidationUtility.validateQuantity(prodQtyLayout,prodQty.getText().toString())){
             isValid = false;
         }
 
-        if(!validatePrice()){
+        if(!ValidationUtility.validatePrice(prodPriceLayout,prodPrice.getText().toString())){
             isValid = false;
         }
 
-        if(!validateType()){
+        if(!ValidationUtility.validateString(prodTypeLayout,prodType.getText().toString())){
             isValid = false;
         }
 
