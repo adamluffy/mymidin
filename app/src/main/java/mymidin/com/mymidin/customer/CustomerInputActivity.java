@@ -17,8 +17,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.util.regex.Pattern;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import model.Customer;
 import mymidin.com.mymidin.R;
@@ -30,8 +28,8 @@ public class CustomerInputActivity extends AppCompatActivity {
     private final int PICK_IMAGE = 101;
 
     private CircleImageView custImage;
-    private TextInputLayout custNameLayout, custICLayout, custAddressLayout;
-    private TextInputEditText custName, custIc, custAdress;
+    private TextInputLayout custNameLayout, custPhoneLayout, custAddressLayout;
+    private TextInputEditText custName, custPhone, custAdress;
 
     private Uri filePath;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -57,8 +55,8 @@ public class CustomerInputActivity extends AppCompatActivity {
         custNameLayout = findViewById(R.id.cust_name_input_layout);
         custName = findViewById(R.id.cust_name_input);
 
-        custICLayout = findViewById(R.id.cust_ic_input_layout);
-        custIc = findViewById(R.id.cust_ic_input);
+        custPhoneLayout = findViewById(R.id.cust_phone_input_layout);
+        custPhone = findViewById(R.id.cust_phone_input);
 
         custAddressLayout = findViewById(R.id.cust_address_input_layout);
         custAdress = findViewById(R.id.cust_address_input);
@@ -82,7 +80,7 @@ public class CustomerInputActivity extends AppCompatActivity {
 
                             Customer customer = new Customer(
                                     custName.getText().toString(),
-                                    custIc.getText().toString(),
+                                    custPhone.getText().toString(),
                                     custAdress.getText().toString(),
                                     path,
                                     user.getUid()
@@ -116,7 +114,7 @@ public class CustomerInputActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        if(!ValidationUtility.validateIdentityNumber(custICLayout,custIc.getText().toString())){
+        if(!ValidationUtility.validatePhoneNumber(custPhoneLayout,custPhone.getText().toString())){
             isValid = false;
         }
 

@@ -3,6 +3,7 @@ package model;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Product {
@@ -12,6 +13,7 @@ public class Product {
     private String type;
     private int quantity;
     private double price;
+    private ArrayList<Report> reports;
     private @ServerTimestamp Date createAt;
     private Date updateAt;
     private String sellerId;
@@ -85,6 +87,14 @@ public class Product {
         return this;
     }
 
+    public void stockOut (int quantity){
+
+        if(this.quantity>quantity){
+            this.quantity-=quantity;
+        }
+
+    }
+
     public double getPrice() {
         return price;
     }
@@ -94,7 +104,53 @@ public class Product {
         return this;
     }
 
+    public ArrayList<Report> getReports() {
+        return reports;
+    }
+
+    public Product setReports(ArrayList<Report> reports) {
+        this.reports = reports;
+        return this;
+    }
+
+    public void addReport(Report report){
+        this.reports.add(report);
+    }
+
+
     public String getSellerId() {
         return sellerId;
+    }
+
+    public class Report {
+
+        String productType;
+        double totalSales;
+
+        public Report() {
+        }
+
+        public Report(String productType, double totalSales) {
+            this.productType = productType;
+            this.totalSales = totalSales;
+        }
+
+        public String getProductType() {
+            return productType;
+        }
+
+        public Report setProductType(String productType) {
+            this.productType = productType;
+            return this;
+        }
+
+        public double getTotalSales() {
+            return totalSales;
+        }
+
+        public Report setTotalSales(double totalSales) {
+            this.totalSales = totalSales;
+            return this;
+        }
     }
 }

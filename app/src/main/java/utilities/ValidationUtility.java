@@ -78,7 +78,17 @@ public class ValidationUtility {
         return true;
     }
 
-    public static boolean validateIdentityNumber(TextInputLayout icInputLayout, String ic){
+    public static boolean validatePhoneNumber(TextInputLayout phoneNumberLayout, String phoneNumber){
+
+        if(phoneNumber.isEmpty()){
+            phoneNumberLayout.setError("Please enter phone number");
+            return false;
+        }else if(!Pattern.matches("\\d{10,11}",phoneNumber)){
+            phoneNumberLayout.setError("Please enter a valid phone number");
+            return false;
+        }else {
+            phoneNumberLayout.setErrorEnabled(false);
+        }
         return true;
     }
 

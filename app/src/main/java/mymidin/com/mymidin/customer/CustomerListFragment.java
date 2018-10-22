@@ -35,6 +35,7 @@ public class CustomerListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.customer_list_fragment,container,false);
+        HomeActivity activity = ((HomeActivity)getActivity());
 
         TextView emptyView = v.findViewById(R.id.customer_list_empty_view);
         emptyView.setVisibility(View.GONE);
@@ -44,7 +45,7 @@ public class CustomerListFragment extends Fragment {
 
         RecyclerView customerList = v.findViewById(R.id.customer_list);
         customerList.setVisibility(View.GONE);
-        customerList.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+        customerList.addItemDecoration(new DividerItemDecoration(activity,DividerItemDecoration.VERTICAL));
 
         Query query = FirebaseFirestore.getInstance()
                 .collection("customer")
