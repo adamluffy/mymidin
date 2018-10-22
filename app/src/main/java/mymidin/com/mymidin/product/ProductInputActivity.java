@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,11 +20,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.util.regex.Pattern;
-
 import model.Product;
+import model.ProductType;
 import mymidin.com.mymidin.R;
 import respository.ProductDatabase;
+import utilities.ValidationUtility;
 
 public class ProductInputActivity extends AppCompatActivity{
 
@@ -58,6 +59,8 @@ public class ProductInputActivity extends AppCompatActivity{
         productQuantityLayout = findViewById(R.id.product_qty_input_layout);
 
         productType = findViewById(R.id.type_input);
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,ProductType.getTypes());
+        productType.setAdapter(typeAdapter);
 
         productImage = findViewById(R.id.product_image_input);
         productImage.setOnClickListener(view->{
@@ -118,67 +121,20 @@ public class ProductInputActivity extends AppCompatActivity{
 
     }
 
-    private boolean validateName(){
-
-        String name = productName.getText().toString();
-
-        if(name.isEmpty()){
-            productNameLayout.setError("Please input product name");
-            return false;
-        }else{
-            productNameLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
-    private boolean validatePrice(){
-
-        String price = productPrice.getText().toString();
-
-        if(price.isEmpty()){
-            productPriceLayout.setError("Please input product price");
-            return false;
-        }else if(!Pattern.matches("\\d+",price)){
-            productPriceLayout.setError("Please input a numeric price");{
-                productPriceLayout.setErrorEnabled(false);
-            }
-
-            return false;
-        }else
-        return true;
-    }
-
-    private boolean validateQuantity(){
-
-        String qty = productQuantity.getText().toString();
-
-        if(qty.isEmpty()){
-            productQuantityLayout.setError("Please input product quantity");
-            return false;
-        }else if(!Pattern.matches("\\d+",qty)){
-            productQuantityLayout.setError("Please input a numeric quantity");
-            return false;
-        }else{
-            productQuantityLayout.setErrorEnabled(false);
-        }
-
-        return true;
-    }
 
     private boolean validateInput() {
 
         boolean isValid = true;
 
-        if(!validateName()){
+        if(!ValidationUtility.validateString(productNameLayout,productName.getText().toString())){
             isValid = false;
         }
 
-        if (!validateQuantity()){
+        if (!ValidationUtility.validateQuantity(productQuantityLayout,productQuantity.getText().toString())){
             isValid = false;
         }
 
-        if(!validatePrice()){
+        if(!ValidationUtility.validatePrice(productPriceLayout,productPrice.getText().toString())){
             isValid = false;
         }
 

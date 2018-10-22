@@ -1,6 +1,5 @@
 package model;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
@@ -92,4 +91,6 @@ public class Sales {
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
     }
+
+
 }

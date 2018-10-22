@@ -38,9 +38,8 @@ public class ProductSold {
         return productQty;
     }
 
-    public ProductSold setProductQty(int productQty) {
+    public void setProductQty(int productQty) {
         this.productQty = productQty;
-        return this;
     }
 
     public String getProductType() {

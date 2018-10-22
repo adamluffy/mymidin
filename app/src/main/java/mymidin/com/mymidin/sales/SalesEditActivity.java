@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import dataadapter.CustomerArrayAdapter;
 import dataadapter.ProductSoldDataAdapter;
@@ -39,6 +38,7 @@ import mymidin.com.mymidin.R;
 import mymidin.com.mymidin.product.ProductSoldDialogFragment;
 import respository.CustomerDatabase;
 import respository.SalesDatabase;
+import utilities.ValidationUtility;
 
 public class SalesEditActivity extends AppCompatActivity implements View.OnClickListener, ProductSoldDialogFragment.ProductSoldListener {
 
@@ -183,33 +183,6 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
         return updates;
     }
 
-    private boolean validateDate(){
-
-        String date = salesDate.getText().toString().trim();
-
-        if(date.isEmpty()){
-            salesDateLayout.setError("Please Input Date");
-            return false;
-        }else if(!Pattern.matches("\\d{2}/\\d{2}/\\d{4}",date)){
-            salesDateLayout.setError("Please Input a valid date");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean validateCustomer(){
-
-        String custName = salesCust.getText().toString().trim();
-
-        if(custName.isEmpty() || customer==null){
-            salesCustLayout.setError("Please select customer or customer is not available");
-            return false;
-        }
-
-        return true;
-    }
-
     private boolean validateItemSold(){
 
         return total>0 && !productSolds.isEmpty();
@@ -219,11 +192,11 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
 
         boolean isValid = true;
 
-        if(!validateDate()){
+        if(!ValidationUtility.validateDate(salesDateLayout,salesDate.getText().toString())){
             isValid = false;
         }
 
-        if(!validateCustomer()){
+        if(!ValidationUtility.validateString(salesCustLayout,salesCust.getText().toString()) || customer == null){
             isValid = false;
         }
 

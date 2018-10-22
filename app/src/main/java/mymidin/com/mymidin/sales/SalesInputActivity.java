@@ -15,18 +15,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import dataadapter.CustomerArrayAdapter;
 import dataadapter.ProductSoldDataAdapter;
@@ -36,6 +39,8 @@ import model.Sales;
 import mymidin.com.mymidin.R;
 import mymidin.com.mymidin.product.ProductSoldDialogFragment;
 import respository.SalesDatabase;
+import utilities.DateUtilities;
+import utilities.ValidationUtility;
 
 public class SalesInputActivity extends AppCompatActivity implements View.OnClickListener, ProductSoldDialogFragment.ProductSoldListener{
 
@@ -57,11 +62,11 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
     Customer customer;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    ListenerRegistration fireListener;
+
 
     RecyclerView soldList;
 
-    String salesNumber;
+    String salesNumber = "IV00000001";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,9 +110,7 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
         CustomerArrayAdapter customerArrayAdapter = new CustomerArrayAdapter(this, customers);
         customerInput.setAdapter(customerArrayAdapter);
         customerInput.setThreshold(1);
-        customerInput.setOnItemClickListener((parent, view, position, id) -> {
-            customer = customers.get(position);
-        });
+        customerInput.setOnItemClickListener((parent, view, position, id) -> customer = customers.get(position) );
 
         soldList = findViewById(R.id.sold_list);
         productSolds = new ArrayList<>();
@@ -172,38 +175,13 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 productSoldDataAdapter.removeItem(position);
+                total-=productSolds.get(position).getProductPrice()*productSolds.get(position).getProductQty();
+                //recalculate total
             }
         };
 
         ItemTouchHelper helper = new ItemTouchHelper(cb);
         helper.attachToRecyclerView(soldList);
-    }
-
-    private boolean validateDate(){
-
-        String date = dateInput.getText().toString().trim();
-
-        if(date.isEmpty()){
-            dateLayout.setError("Please Input Date");
-            return false;
-        }else if(!Pattern.matches("\\d{2}/\\d{2}/\\d{4}",date)){
-            dateLayout.setError("Please Input a valid date");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean validateCustomer(){
-
-        String custName = customerInput.getText().toString().trim();
-
-        if(custName.isEmpty() || customer==null){
-            customerLayout.setError("Please select customer or customer is not available");
-            return false;
-        }
-
-        return true;
     }
 
     private boolean validateItemSold(){
@@ -215,11 +193,11 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
 
         boolean isValid = true;
 
-        if(!validateDate()){
+        if(!ValidationUtility.validateDate(dateLayout,dateInput.getText().toString())){
             isValid = false;
         }
 
-        if(!validateCustomer()){
+        if(!ValidationUtility.validateString(customerLayout,customerInput.getText().toString()) || customer==null){
             isValid = false;
         }
 
@@ -242,32 +220,24 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onStart() {
         super.onStart();
-        fireListener = SalesDatabase.getSellerSales()
-                .orderBy("salesNumber",Query.Direction.DESCENDING)
-                .limit(1)
+        SalesDatabase.getSellerSales()
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
-                    if(e!=null){
-                        e.printStackTrace();
-                    }
 
-                    salesNumber = "IV00000001";
+                    if(queryDocumentSnapshots!=null &&!queryDocumentSnapshots.isEmpty()){
 
-                    if(queryDocumentSnapshots!=null && !queryDocumentSnapshots.isEmpty()){
-                        Sales s = queryDocumentSnapshots.getDocuments().get(0).toObject(Sales.class);
+                        Sales s = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size()-1).toObject(Sales.class);
                         if(s!=null){
                             String str = s.getSalesNumber();
                             str = str.replaceAll("\\D+","");
                             salesNumber = "IV"+String.format("%0"+str.length()+"d",Integer.parseInt(str)+1);
                         }
                     }
-
                 });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        fireListener.remove();
     }
 
     @Override
