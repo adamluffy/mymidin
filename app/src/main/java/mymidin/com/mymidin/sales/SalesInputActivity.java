@@ -2,6 +2,7 @@ package mymidin.com.mymidin.sales;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -15,21 +16,25 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import dataadapter.CustomerArrayAdapter;
 import dataadapter.ProductSoldDataAdapter;
@@ -39,7 +44,6 @@ import model.Sales;
 import mymidin.com.mymidin.R;
 import mymidin.com.mymidin.product.ProductSoldDialogFragment;
 import respository.SalesDatabase;
-import utilities.DateUtilities;
 import utilities.ValidationUtility;
 
 public class SalesInputActivity extends AppCompatActivity implements View.OnClickListener, ProductSoldDialogFragment.ProductSoldListener{
@@ -55,14 +59,14 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
     private ArrayList<Customer> customers;
 
     private TextView totalAmount;
-    private double total;
+    private double total = 0;
     AutoCompleteTextView customerInput;
 
     Calendar dateSales;
     Customer customer;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    ListenerRegistration mListener;
 
     RecyclerView soldList;
 
@@ -135,19 +139,21 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
                         salesNumber,
                         dateSales.getTime(),
                         customer,
-                        productSolds,
                         total,
                         user.getUid()
                 );
 
-                SalesDatabase.addSales(sales)
-                        .addOnSuccessListener(documentReference -> {
-                           Toast.makeText(SalesInputActivity.this,"Successfully added to database",Toast.LENGTH_SHORT).show();
-                           SalesInputActivity.this.finish();
+                //stock out data from the products
+
+                SalesDatabase.createSales(sales,productSolds)
+                        .addOnSuccessListener(this,aVoid -> {
+
+                            Toast.makeText(this,"Successfully add to database", Toast.LENGTH_SHORT).show();
+                            this.finish();
                         })
                         .addOnFailureListener(e -> {
-                           Toast.makeText(SalesInputActivity.this,"Failed: "+e.getMessage(),Toast.LENGTH_SHORT).show();
-                           saveBtn.setEnabled(true);
+                            Toast.makeText(this,"Fail: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            saveBtn.setEnabled(true);
                         });
             }
 
@@ -174,9 +180,10 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                productSoldDataAdapter.removeItem(position);
-                total-=productSolds.get(position).getProductPrice()*productSolds.get(position).getProductQty();
-                //recalculate total
+                ProductSold sold = productSolds.get(position);
+                subtractTotal(sold.getProductQty()*sold.getProductPrice());
+                productSolds.remove(position);
+                productSoldDataAdapter.notifyDataSetChanged();
             }
         };
 
@@ -220,12 +227,14 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onStart() {
         super.onStart();
-        SalesDatabase.getSellerSales()
+        mListener = SalesDatabase.getSellerSales()
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
 
                     if(queryDocumentSnapshots!=null &&!queryDocumentSnapshots.isEmpty()){
 
+
                         Sales s = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size()-1).toObject(Sales.class);
+
                         if(s!=null){
                             String str = s.getSalesNumber();
                             str = str.replaceAll("\\D+","");
@@ -238,17 +247,27 @@ public class SalesInputActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onStop() {
         super.onStop();
+        mListener.remove();
     }
 
     @Override
     public void onProductSoldListener(ProductSold sold) {
+
+        //check if the product is in array
         productSolds.add(sold);
+        addToTotal(sold.getProductQty()*sold.getProductPrice());
 
-        total+=sold.getProductPrice()*sold.getProductQty();
-        totalAmount.setText(String.format(Locale.ENGLISH,"RM %.2f",total));
-
-        productSoldDataAdapter.notifyItemInserted(productSolds.size()-1);
+        productSoldDataAdapter.notifyDataSetChanged();
     }
 
+    private void addToTotal(double price){
+        total+=price;
+        totalAmount.setText(String.format(Locale.ENGLISH,"RM %.2f",total));
+    }
+
+    private void subtractTotal(double price){
+        total-=price;
+        totalAmount.setText(String.format(Locale.ENGLISH,"RM %.2f",total));
+    }
 
 }

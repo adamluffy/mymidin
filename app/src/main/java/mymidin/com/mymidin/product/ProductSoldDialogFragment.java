@@ -70,7 +70,6 @@ public class ProductSoldDialogFragment extends DialogFragment {
         prodEditText.setAdapter(productArrayAdapter);
         prodEditText.setOnItemClickListener((parent, view, position, id) -> {
             selectedProduct = (Product) parent.getItemAtPosition(position);
-            Toast.makeText(getActivity(),selectedProduct.getName(),Toast.LENGTH_SHORT).show();
         });
         prodEditText.setThreshold(1);
 
@@ -87,7 +86,6 @@ public class ProductSoldDialogFragment extends DialogFragment {
                                 Integer.parseInt(qtyEditText.getText().toString()),
                                 selectedProduct.getType());
 
-                        Toast.makeText(getActivity(),sold.getProductName(),Toast.LENGTH_SHORT).show();
                         mListener.onProductSoldListener(sold);
                     }else{
                         Toast.makeText(getActivity(),"Error",Toast.LENGTH_SHORT).show();

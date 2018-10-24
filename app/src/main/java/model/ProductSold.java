@@ -1,5 +1,8 @@
 package model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProductSold {
 
     private String productName;
@@ -49,4 +52,6 @@ public class ProductSold {
     public void setProductType(String productType) {
         this.productType = productType;
     }
+
+
 }

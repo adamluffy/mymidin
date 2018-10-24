@@ -2,7 +2,6 @@ package model;
 
 import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Sales {
@@ -10,7 +9,6 @@ public class Sales {
     private String salesNumber;
     private Date date;
     private Customer customer;
-    private ArrayList<ProductSold> products;
     private double totalAmount;
     private String sellerId;
     private Date updateAt;
@@ -18,11 +16,10 @@ public class Sales {
     public Sales() {
     }
 
-    public Sales(String salesNumber, Date date, Customer customer, ArrayList<ProductSold> products, double totalAmount, String sellerId) {
+    public Sales(String salesNumber, Date date, Customer customer, double totalAmount, String sellerId) {
         this.salesNumber = salesNumber;
         this.date = date;
         this.customer = customer;
-        this.products = products;
         this.totalAmount = totalAmount;
         this.sellerId = sellerId;
     }
@@ -51,28 +48,12 @@ public class Sales {
         this.customer = customer;
     }
 
-    public ArrayList<ProductSold> getProducts() {
-        return products;
-    }
-
-    public void setProducts(ArrayList<ProductSold> products) {
-        this.products = products;
-    }
-
     public double getTotalAmount() {
         return totalAmount;
     }
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public void addProduct(ProductSold product){
-        this.products.add(product);
-    }
-
-    public void removeProduct(int index){
-        this.products.remove(index);
     }
 
     public String getSellerId() {
@@ -91,6 +72,5 @@ public class Sales {
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
     }
-
 
 }

@@ -65,7 +65,7 @@ public class CustomerArrayAdapter extends ArrayAdapter<Customer> implements Filt
         custName.setText(customer.getCustName()); //inject the customer name into the text view
 
         TextView custIc = listView.findViewById(R.id.cust_ic_display); //customer identity card view
-        custIc.setText(customer.getIcNo()); //inject the ic number into the textview
+        custIc.setText(customer.getPhoneNumber()); //inject the ic number into the textview
 
         return listView;
 

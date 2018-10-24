@@ -4,10 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 
-import com.firebase.ui.firestore.FirestoreArray;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
@@ -17,18 +14,16 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collection;
-
 import model.Customer;
 import mymidin.com.mymidin.R;
 
-public class CustomerDataAdapter extends FirestoreRecyclerAdapter<Customer,CustomerViewHolder> implements Filterable{
+public class CustomerDataAdapter extends FirestoreRecyclerAdapter<Customer,CustomerViewHolder>{
 
     /*
     An Custom RecyclerView DataAdapter for customer using firestore
      */
 
-    Query query = FirebaseFirestore.getInstance()
+    private Query query = FirebaseFirestore.getInstance()
             .collection("customer")
             .whereEqualTo("sellerId", FirebaseAuth.getInstance().getCurrentUser().getUid()); //get all customer for seller
 
@@ -49,7 +44,7 @@ public class CustomerDataAdapter extends FirestoreRecyclerAdapter<Customer,Custo
                             .into(holder.custImage);
                 });
         holder.custName.setText(model.getCustName()); //inject the customer name into the textview
-        holder.custIC.setText(model.getIcNo()); //inject the customer ic into the textview
+        holder.custPhone.setText(model.getPhoneNumber()); //inject the customer ic into the textview
     }
 
     @NonNull
@@ -66,53 +61,5 @@ public class CustomerDataAdapter extends FirestoreRecyclerAdapter<Customer,Custo
         return super.getSnapshots();
     }
 
-    //filtering customer in the recyclerview
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
 
-            @Override
-            public CharSequence convertResultToString(Object resultValue) {
-                return ((Customer)resultValue).getCustName();
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-
-                FilterResults filterResults = new FilterResults();
-
-                if(constraint!=null){
-
-                    ObservableSnapshotArray<Customer> customers = new FirestoreArray<Customer>(query, snapshot -> snapshot.toObject(Customer.class));
-
-                    customers.clear();
-
-                    for(Customer cust: getSnapshots()){
-                        if(cust.getCustName().toLowerCase().contains(constraint.toString().toLowerCase())){
-                            customers.add(cust);
-                        }
-                    }
-
-                    filterResults.values = customers;
-                    filterResults.count = customers.size();
-                }
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-
-                getSnapshots().clear();
-
-                if(results!=null && results.count>0){
-                    getSnapshots().addAll((FirestoreArray<Customer>) results.values);
-                    notifyDataSetChanged();
-                }else if(constraint==null){
-                    ObservableSnapshotArray<Customer> customers = new FirestoreArray<Customer>(query, snapshot -> snapshot.toObject(Customer.class));
-                    getSnapshots().addAll(customers);
-                    notifyDataSetChanged();
-                }
-            }
-        };
-    }
 }

@@ -125,8 +125,6 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
         total = s.getTotalAmount();
         totalAmount.setText(String.format(Locale.ENGLISH,"%.2f",s.getTotalAmount()));
 
-        productSolds = s.getProducts();
-        dataAdapter = new ProductSoldDataAdapter(productSolds);
 
         soldRecyclerView.setAdapter(dataAdapter);
         soldRecyclerView.setHasFixedSize(true);
@@ -168,10 +166,6 @@ public class SalesEditActivity extends AppCompatActivity implements View.OnClick
 
         if(!sales.getDate().equals(dateSales.getTime())){
             updates.put("date",dateSales.getTime());
-        }
-
-        if(!sales.getProducts().equals(productSolds)){
-            updates.put("products",productSolds);
         }
 
         if(sales.getTotalAmount() != total){

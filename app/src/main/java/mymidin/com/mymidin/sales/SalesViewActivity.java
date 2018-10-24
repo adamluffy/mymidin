@@ -73,10 +73,6 @@ public class SalesViewActivity extends AppCompatActivity {
         salesDate.setText(format.format(sales.getDate()));
         custName.setText(sales.getCustomer().getCustName());
 
-        ProductSoldDataAdapter dataAdapter = new ProductSoldDataAdapter(sales.getProducts());
-        salesList.setAdapter(dataAdapter);
-        salesList.setHasFixedSize(true);
-        salesList.setLayoutManager(new LinearLayoutManager(this));
 
         totalAmount.setText(String.format(Locale.ENGLISH,"RM %.2f",sales.getTotalAmount()));
     }

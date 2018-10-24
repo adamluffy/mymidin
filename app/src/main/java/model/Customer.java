@@ -8,7 +8,7 @@ import java.util.Date;
 public class Customer {
 
     private String custName;
-    private String icNo;
+    private String phoneNumber;
     private String address;
     private String custImageUrl;
     private String sellerId;
@@ -17,9 +17,9 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String custName, String icNo, String address, String custImageUrl, String sellerId) {
+    public Customer(String custName, String phoneNumber, String address, String custImageUrl, String sellerId) {
         this.custName = custName;
-        this.icNo = icNo;
+        this.phoneNumber = phoneNumber;
         this.address = address;
         this.custImageUrl = custImageUrl;
         this.sellerId = sellerId;
@@ -35,12 +35,12 @@ public class Customer {
         return this;
     }
 
-    public String getIcNo() {
-        return icNo;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public Customer setIcNo(String icNo) {
-        this.icNo = icNo;
+    public Customer setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
         return this;
     }
 

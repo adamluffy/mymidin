@@ -35,8 +35,8 @@ public class ReportActivity extends AppCompatActivity {
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new DailyReportFragment());
-        fragmentList.add(new WeeklyReportFragment());
         fragmentList.add(new MonthlyReportFragment());
+        fragmentList.add(new WeeklyReportFragment());
 
         /*
       The {@link ViewPager} that will host the section contents.

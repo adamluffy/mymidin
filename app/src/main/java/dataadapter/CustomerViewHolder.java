@@ -10,14 +10,14 @@ import mymidin.com.mymidin.R;
 
 public class CustomerViewHolder extends RecyclerView.ViewHolder{
 
-    protected CircleImageView custImage;
-    protected TextView custName, custIC;
+    CircleImageView custImage;
+    TextView custName, custPhone;
 
     CustomerViewHolder(@NonNull View itemView) {
         super(itemView);
         custImage = itemView.findViewById(R.id.customer_profile_image);
         custName = itemView.findViewById(R.id.cust_name_display);
-        custIC = itemView.findViewById(R.id.cust_ic_display);
+        custPhone = itemView.findViewById(R.id.cust_ic_display);
     }
 
     public CircleImageView getCustImage() {
